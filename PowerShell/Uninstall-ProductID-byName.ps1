@@ -1,4 +1,4 @@
-$applicaion = "*Adobe*"
+$application = "*Adobe*"
 
 $searchobjects = get-wmiobject Win32_Product | Where-Object {$_.Name -like $application}
 
