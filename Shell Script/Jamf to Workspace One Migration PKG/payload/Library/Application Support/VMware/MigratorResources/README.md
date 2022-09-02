@@ -1,0 +1,1 @@
+Download your WS1 Enrollment Profile here and rename to enroll.mobileconfig
