@@ -6,6 +6,8 @@ Add-AppxPackage -Path "$AppxBundle" -DependencyPath $Dependencies
 
 $AppxLookup=$(Get-AppxPackage | Where-Object {$_.Name -eq "$AppxName"})
 
+## Detection Script
+
 if (Test-Path $AppxLookup.InstallLocation) {
 
     write-host "$AppxLookup Installed Successfully."
