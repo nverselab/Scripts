@@ -14,7 +14,6 @@ $AppxName="Microsoft.CompanyPortal" # This is the expected AppxPackage Name attr
 if (Test-Path $AppxLookup.InstallLocation) {
 
     write-host "$AppxLookup Installed Successfully."
-    $True
     exit 0
 
     }
@@ -22,7 +21,6 @@ if (Test-Path $AppxLookup.InstallLocation) {
 else {
 
     write-host "The AppxBundle failed to Install."
-    $False
     exit 1
 
     }
