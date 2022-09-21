@@ -8,8 +8,8 @@ Add-AppxPackage -Path "$AppxBundle" -DependencyPath $Dependencies
 
 ## Detection Script
 
-$AppxLookup=$(Get-AppxPackage | Where-Object {$_.Name -eq "$AppxName"})
 $AppxName="Microsoft.CompanyPortal" # This is the expected AppxPackage Name attribute
+$AppxLookup=$(Get-AppxPackage | Where-Object {$_.Name -eq "$AppxName"})
 
 if (Test-Path $AppxLookup.InstallLocation) {
 
