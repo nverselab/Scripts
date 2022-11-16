@@ -1,0 +1,12 @@
+#!/bin/bash
+
+rapidVersionCheck=$(sudo grep "Agent Info" /opt/rapid7/ir_agent/components/insight_agent/common/agent.log | tail -n1)
+
+if [[ $rapidVersionCheck = *"Version"* ]]; then
+	rapidVersion=$(echo $rapidVersionCheck | awk '{print $11}')
+	echo "<result>$rapidVersion</result>"
+else 
+	
+	echo "<result>Not Installed</result>"
+	
+fi
