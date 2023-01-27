@@ -1,0 +1,21 @@
+##Show Bluetooth
+
+currentUser=$( ls -l /dev/console | awk '{print $3}' )
+sudo -u ${currentUser} defaults write /Users/${currentUser}/Library/Preferences/ByHost/com.apple.controlcenter.plist Bluetooth -int 18
+exit 0
+
+##From <https://community.jamf.com/t5/jamf-pro/big-sur-bluetooth-menu-no-longer-exists/m-p/223145> 
+
+##Enable Tap to Click
+
+#!/bin/sh
+currentUser=$( ls -l /dev/console | awk '{print $3}' )
+defaults write "/Users/${currentUser}/Library/Preferences/com.apple.AppleMultitouchTrackpad" Clicking -bool True
+
+##From <https://community.jamf.com/t5/jamf-pro/enable-tap-to-click-with-custom-config-profile/m-p/62382> 
+
+##Change Network Service Order
+
+networksetup -ordernetworkservices "Built-in Ethernet" Wi-Fi "Thunderbolt Ethernet" "Bluetooth PAN"
+
+##From <https://community.jamf.com/t5/jamf-pro/network-preferences-change-service-order/m-p/41953> 
