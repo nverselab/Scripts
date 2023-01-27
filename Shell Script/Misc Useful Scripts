@@ -1,5 +1,6 @@
 ##Show Bluetooth
 
+#!/bin/sh
 currentUser=$( ls -l /dev/console | awk '{print $3}' )
 sudo -u ${currentUser} defaults write /Users/${currentUser}/Library/Preferences/ByHost/com.apple.controlcenter.plist Bluetooth -int 18
 exit 0
