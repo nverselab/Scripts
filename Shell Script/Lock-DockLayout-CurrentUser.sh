@@ -22,7 +22,7 @@ if [ -z "$currentUser" -o "$currentUser" = "loginwindow" ]; then
   exit 1
 fi
 
-# Try to lock down the dock
+# Prevent changes to the Dock for logged-in user.  Set to False to unlock.
 
 runAsUser defaults write com.apple.Dock contents-immutable -bool true; killall Dock
 
