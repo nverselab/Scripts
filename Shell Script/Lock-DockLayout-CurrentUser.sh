@@ -9,18 +9,9 @@ runAsUser() {
     launchctl asuser "$uid" sudo -u "$currentUser" "$@"
   else
     echo "no user logged in"
-    # uncomment the exit command
-    # to make the function exit with an error when no user is logged in
-    # exit 1
+    exit 1
   fi
 }
-
-# Check to see if a user is logged in
-
-if [ -z "$currentUser" -o "$currentUser" = "loginwindow" ]; then
-  echo "no user logged in, cannot proceed"
-  exit 1
-fi
 
 # Prevent changes to the Dock for logged-in user.  Set to False to unlock.
 
