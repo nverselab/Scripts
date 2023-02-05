@@ -2,8 +2,8 @@
 
 ##################################################################################################################
 # This script will elevate the current user to administrator temporarily to escrow bootstrap token to Jamf Pro.  # 
-# User will need to provide credentials to complete                                                              #
-# User will automatically lose admin after each attempt                                                          #
+# User will need to provide credentials as SecureToken enabled to complete                                       #
+# User will be removed from admin after each attempt                                                             #
 ##################################################################################################################
 
 #######################
