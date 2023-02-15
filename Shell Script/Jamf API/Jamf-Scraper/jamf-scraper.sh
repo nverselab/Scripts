@@ -56,6 +56,7 @@
 #
 # FUTURE FEATURE IDEAS
 #
+# - Regenerate report from local XML files instead of repull
 # - Combined Report View
 # - Server Configuration Summary
 #   * Sites
