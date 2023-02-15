@@ -85,11 +85,11 @@
 #############
 
 # Base URL for Jamf Pro API endpoint
-base_url="https://nelsonpronfr.jamfcloud.com/JSSResource"
+base_url="https://yourJamfServer.jamfcloud.com/JSSResource"
 
 # Jamf Pro API credentials
 api_username="auditorAPI"
-api_password="Auditpass1"
+api_password="password"
 
 # Output Directory Path (if not specified, will default to current user's Desktop)
 outputDirectory=""
