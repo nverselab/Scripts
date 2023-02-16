@@ -1,4 +1,6 @@
-# Description
+# Jamf-Scraper has moved to it's own [repository](https://github.com/nverselab/Jamf-Scraper)
+
+## Description
 
 The purpose of this script is to create a custom report of inventory data from Jamf Pro for
 reporting, auditing, or archiving records as they exist at runtime.  Inventory object data is pulled
@@ -13,7 +15,7 @@ permissions.
 This scrip will make an API call for each object ID it finds.  In large environments this may result
 in hundreds or thousands of calls and will take a long time to complete.  Please be patient.
 
-# Instructions
+## Instructions
 
 Download the latest version zip file and extract.  Before runninng, make sure to change the base_url to 
 your Jamf Pro server, change the credentials for your auditor API account, set an output directory (it
