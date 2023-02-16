@@ -52,7 +52,7 @@ group_ids=`xmllint --xpath "//computer_group/id/text()" $outputDirectory/XML/com
 for id in $group_ids; do
 	computergroup_endpoint="$computergroups_endpoint/id/$id"
 	group_info=`curl -H "Accept: application/xml" -u "$api_username:$api_password" "$computergroup_endpoint"`
-	group_name=`echo "$group_info" | xmllint --xpath "//computer_group/name/text()" -`
+	group_name=`echo "$group_info" | xmllint --xpath "//computer_group/name/text()" - | tr "," " " | tr -d "\\/"`
 	smart=`echo "$group_info" | xmllint --xpath "//computer_group/is_smart/text()" -`
 	count=`echo "$group_info" | xmllint --xpath "//computer_group/computers/size/text()" -`
 	site=`echo "$group_info" | xmllint --xpath "//computer_group/site/name/text()" -`

@@ -72,7 +72,6 @@
 #   * Distribution Points
 # - Licensed Software Report
 # - Mac Applications Report
-# - Policies Report
 # - Configuration Profiles Report (Computers and Devices)
 # - Extension Attributes Report (Computers and Devices)
 # - Packages Report
@@ -134,3 +133,4 @@ fi
 #"$script_dir/fragments/jamf-accounts.sh" $parameters
 #"$script_dir/fragments/groups-computer.sh" $parameters
 #"$script_dir/fragments/groups-device.sh" $parameters
+#"$script_dir/fragments/policies.sh" $parameters

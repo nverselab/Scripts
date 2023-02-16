@@ -52,7 +52,7 @@ group_ids=`xmllint --xpath "//mobile_device_group/id/text()" $outputDirectory/XM
 for id in $group_ids; do
 	devicegroup_endpoint="$devicegroups_endpoint/id/$id"
 	group_info=`curl -H "Accept: application/xml" -u "$api_username:$api_password" "$devicegroup_endpoint"`
-	group_name=`echo "$group_info" | xmllint --xpath "//mobile_device_group/name/text()" -`
+	group_name=`echo "$group_info" | xmllint --xpath "//mobile_device_group/name/text()" - | tr "," " " | tr -d "\\/"`
 	smart=`echo "$group_info" | xmllint --xpath "//mobile_device_group/is_smart/text()" -`
 	count=`echo "$group_info" | xmllint --xpath "//mobile_device_group/mobile_devices/size/text()" -`
 	site=`echo "$group_info" | xmllint --xpath "//mobile_device_group/site/name/text()" -`
