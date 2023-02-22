@@ -34,7 +34,7 @@ do
 done
 
 # Prompt user for Jamf Pro base_url
-IBMwifi=`echo "-type popup -silent -title \"Known Wifi Networks\" -accessory_view_type dropdown -accessory_view_payload \"/placeholder Choose the Wi-Fi network to forget /list $networks_str \" -main_button_label \"Remove\" -secondary_button_label \"Cancel\""`
+IBMwifi=`echo "-type popup -silent -title \"Remove a known Wifi Network\" -accessory_view_type dropdown -accessory_view_payload \"/placeholder Choose the Wi-Fi network to forget /list $networks_str \" -main_button_label \"Remove\" -secondary_button_label \"Cancel\""`
 IBMcommand="$IBMpath $IBMwifi"
 
 wifiSelection=$(echo $IBMcommand | sh)
