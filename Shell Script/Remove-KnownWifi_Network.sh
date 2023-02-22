@@ -16,7 +16,7 @@ interface=$(networksetup -listallhardwareports | awk '/Wi-Fi|AirPort/{getline; p
 
 #!/bin/bash
 
-# Get the list of known Wi-Fi networks on en1
+# Get the list of known Wi-Fi networks on the wifi adapter
 networks=$(networksetup -listpreferredwirelessnetworks $interface | sed 's/\t//g')
 
 # Split the list into an array
