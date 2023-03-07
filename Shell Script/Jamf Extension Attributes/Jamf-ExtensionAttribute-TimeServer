@@ -1,0 +1,6 @@
+#!/bin/bash
+
+ntp_servers=$(sudo systemsetup -getnetworktimeserver)
+timeserver=$(echo $ntp_servers | awk '{print $4}')
+
+echo "<result>$timeserver</result>"
