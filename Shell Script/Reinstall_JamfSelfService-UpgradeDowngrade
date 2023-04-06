@@ -1,0 +1,50 @@
+#!/bin/bash
+
+#################################################################################
+# This script will check for a specific version of Jamf Self Service and        #
+# remove it before running a custom policy event to install a specific version. #
+# Make sure Automatic install of Self Service is disabled and your manual       #
+# install policy has the event trigger "installselfservice".                    #
+#################################################################################
+
+remove_version="10.45.0"
+
+# Check the current version of Jamf Self Service
+current_version=$(defaults read /Applications/Self\ Service.app/Contents/Info CFBundleShortVersionString)
+
+# Check if the current version is 10.45.0
+if [ "$current_version" == "$remove_version" ]; then
+	echo "Current version of Jamf Self Service is $current_version.  Starting Removal..."
+else 
+	echo "Current version of Jamf Self Service is not $remove_version. Exiting..."
+	exit 0
+fi
+
+# Remove Jamf Self Service and related files
+sudo killall "Self Service"
+sudo rm -rf "/Applications/Self Service.app"
+sudo rm -rf "/Library/Application Support/JAMF/Self Service.app"
+sudo rm -rf "/Library/Application Support/JAMF/Receipts/SelfService.pkg"
+
+# Trigger specific install policy for desired version
+sudo jamf policy -event installselfservice
+
+# Verify Jamf Self Service Reinstalled and verify which version.
+
+if [ ! -d "/Applications/Self Service.app" ]; then
+	echo "Self Service Not Installed.  Exiting Unsuccessfully..."
+	exit 1
+else
+	echo "Self Service Installed"
+	
+	current_version=$(defaults read /Applications/Self\ Service.app/Contents/Info CFBundleShortVersionString)
+	
+	if [ "$current_version" == "$remove_version" ]; then
+		echo "Current version of Jamf Self Service is $current_version.  Downgrade/Upgrade Failed.  Exiting Unsuccessfully..."
+		exit 1
+	else 
+		echo "Current version of Jamf Self Service is $current_version. Exiting Successfully..."
+		exit 0
+	fi
+fi
+
