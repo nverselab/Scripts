@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Source: https://community.jamf.com/t5/jamf-pro/jamf-pro-migration/m-p/265359
+# Alternative: https://github.com/jamf/ReEnroller
 
 # pass user creds from policy
 jamfUser=$4
