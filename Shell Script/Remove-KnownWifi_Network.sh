@@ -14,8 +14,6 @@ IBMpath="/Applications/Utilities/IBM\ Notifier.app/Contents/MacOS/IBM\ Notifier"
 # Get the interface name for the Wi-Fi adapter
 interface=$(networksetup -listallhardwareports | awk '/Wi-Fi|AirPort/{getline; print $2}')
 
-#!/bin/bash
-
 # Get the list of known Wi-Fi networks on the wifi adapter
 networks=$(networksetup -listpreferredwirelessnetworks $interface | sed 's/\t//g')
 
