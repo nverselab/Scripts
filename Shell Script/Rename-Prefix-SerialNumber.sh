@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Set the name prefix
-prefix="Prefix"
+prefix="$4"
 
 # Get serial number
 serial=$(system_profiler SPHardwareDataType | awk '/Serial/ {print $4}')
