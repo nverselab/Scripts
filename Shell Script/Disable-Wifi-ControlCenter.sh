@@ -11,3 +11,5 @@ sudo -u $currentUser defaults -currentHost write com.apple.controlcenter WiFi -i
 # networksetup -setairportpower en0 off
 
 # networksetup -setnetworkserviceenabled Wi-Fi off
+
+killall ControlCenter
