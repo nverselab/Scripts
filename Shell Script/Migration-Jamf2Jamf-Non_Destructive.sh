@@ -27,6 +27,7 @@ echo "Removing jamf binary and framework from Mac..."
 # Removing Jamf binary and framework after the MDM has been removed
 jamf removeframework
 
+# Attempt to re-enroll using ADE (Requires correct MDM assignment in ABM/ASM)
 sudo profiles renew -type enrollment
 
 exit 0
