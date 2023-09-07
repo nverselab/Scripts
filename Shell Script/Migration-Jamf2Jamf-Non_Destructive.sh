@@ -37,7 +37,7 @@ if [ -n "$enrollInvitationID" ] || [ "$enrollInvitationID" != "optional" ]; then
 
 # Option 1: Enrollment Invtation URL (Automatically sets destination Site as configured and skips Enrollment Admin authentication)
   enrollmentURL="$NewjssURL/enroll?invitation=$enrollInvitationID"
-  open $enrolmentURL
+  open $enrollmentURL
 
 else
 
