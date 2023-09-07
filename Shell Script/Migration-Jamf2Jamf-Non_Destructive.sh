@@ -25,7 +25,7 @@ curl -sku "${jamfUser}:${jamfPass}" "${OldjssUrl}/JSSResource/computercommands/c
 
 echo "Removing jamf binary and framework from Mac..."
 # Removing Jamf binary and framework after the MDM has been removed
-#jamf removeframework
+jamf removeframework
 
 sudo profiles renew -type enrollment
 
