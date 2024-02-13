@@ -5,7 +5,7 @@ $expectedTenantId = "YOUR_EXPECTED_TENANT_ID"
 $expectedTenantName = "YOUR_EXPECTED_TENANT_NAME"
 
 # Log file path
-$logFilePath = "C:\AAD_IntuneCertKeyRemoval.log"
+$logFilePath = "C:\IntuneCertKeyRemoval.log"
 
 # Function to log messages
 function Log-Message {
@@ -37,8 +37,6 @@ If (Test-Path $RegistryPath) {
     if ($currentTenantId -eq $expectedTenantId -and $currentTenantName -eq $expectedTenantName) {
         # Registry values match the expected values, proceed with dsregcmd commands
         Write-Host "Registry values match. Leaving and joining AAD..."
-        Start-Process -FilePath "dsregcmd" -ArgumentList "/leave" -Wait
-        Start-Process -FilePath "dsregcmd" -ArgumentList "/join" -Wait
         Log-Message "Registry values match the expected values, proceed with dsregcmd commands."
     }
     else {
@@ -49,8 +47,6 @@ If (Test-Path $RegistryPath) {
         New-ItemProperty -Path $registryPath -Name "TenantId" -Value $expectedTenantId -Force
         New-ItemProperty -Path $registryPath -Name "TenantName" -Value $expectedTenantName -Force
         Log-Message "Registry values do not match the expected values. Removing registry path and setting expected values and proceeding with dsregcmd commands..."
-        Start-Process -FilePath "dsregcmd" -ArgumentList "/leave" -Wait
-        Start-Process -FilePath "dsregcmd" -ArgumentList "/join" -Wait
     }
 }
 else {
@@ -60,12 +56,28 @@ else {
     New-ItemProperty -Path $registryPath -Name "TenantId" -Value $expectedTenantId -Force
     New-ItemProperty -Path $registryPath -Name "TenantName" -Value $expectedTenantName -Force
     Log-Message "Registry keys not found. Setting expected values and proceeding with dsregcmd commands..."
-    Start-Process -FilePath "dsregcmd" -ArgumentList "/leave" -Wait
-    Start-Process -FilePath "dsregcmd" -ArgumentList "/join" -Wait
 }
 
-# Clean up Intune
-# Check if log file already exists
+# Re-check the resgistry keys and run the dsregcmd commands if correct.
+    $currentTenantId = Get-ItemProperty -Path $registryPath | Select-Object -ExpandProperty TenantId
+    $currentTenantName = Get-ItemProperty -Path $registryPath | Select-Object -ExpandProperty TenantName
+
+    if ($currentTenantId -eq $expectedTenantId -and $currentTenantName -eq $expectedTenantName) {
+        # Registry values match the expected values, proceed with dsregcmd commands
+        Write-Host "Registry values verified. Leaving and joining AAD..."
+        Log-Message "Registry value match verified, proceed with dsregcmd commands."
+
+        Start-Process -FilePath "dsregcmd" -ArgumentList "/leave" -Wait
+        Start-Process -FilePath "dsregcmd" -ArgumentList "/join" -Wait
+    }
+    Else {
+        Log-Message "The registry values did not match the expected TenantId and Tenant Name."
+        Log-Message "currentTenantId: $currentTenantId"
+        Log-Message "currentTenantName: $currentTenantName"
+    }
+
+# Clean up Intune Certificates and GUIDs
+# Check if log file already exists and skip if it does.
 if (!(Test-Path $logFilePath)) {
 
     $IntuneCert = Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.Issuer -like '*Microsoft Intune*' }
@@ -109,8 +121,24 @@ $dsregcmdOutput = dsregcmd /status
 
 # Check if either expectedTenantId or expectedTenantName is present in the output
 if ($dsregcmdOutput -match $expectedTenantId -or $output -match $expectedTenantName) {
-    Log-Message "Expected tenant values were found in dsregcmd /status output."
+    Log-Message "Expected tenant values were found in dsregcmd /status output. Running Automatic-Device-Join Scheduled Task."
+
+    # Start the scheduled task
+    Start-ScheduledTask -TaskName $taskName
+    Log-Message "Automatic-Device-Join task started... Waiting 30 seconds."
+
+    # Wait for 30 seconds
+    Start-Sleep -Seconds 30
+
+    # Get the exit code and last run time of the scheduled task
+    $taskInfo = Get-ScheduledTaskInfo -TaskName $taskName
+    $exitCode = $taskInfo.LastTaskResult
+    $lastRunTime = $taskInfo.LastRunTime
+
+    Log-Message "$taskName Exit Code: $exitCode"
+    Log-Message "$taskName Last Run Time: $lastRunTime"
 } 
+
 Else {
     # Display the whole output if neither expectedTenantId nor expectedTenantName is present
     Log-Message "Expected tenant values were NOT found in dsregcmd /status output."
