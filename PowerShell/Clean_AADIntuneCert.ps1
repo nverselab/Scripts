@@ -31,6 +31,7 @@ If (Test-Path $RegistryPath) {
         Write-Host "Registry values match. Leaving and joining AAD..."
         Start-Process -FilePath "dsregcmd" -ArgumentList "/leave" -Wait
         Start-Process -FilePath "dsregcmd" -ArgumentList "/join" -Wait
+        Log-Message "Registry values match the expected values, proceed with dsregcmd commands."
     }
     else {
         # Registry values do not match the expected values, remove the registry path and set expected values
@@ -39,6 +40,9 @@ If (Test-Path $RegistryPath) {
         New-Item -Path $registryPath -Force
         New-ItemProperty -Path $registryPath -Name "TenantId" -Value $expectedTenantId -Force
         New-ItemProperty -Path $registryPath -Name "TenantName" -Value $expectedTenantName -Force
+        Log-Message "Registry values do not match the expected values. Removing registry path and setting expected values and proceeding with dsregcmd commands..."
+        Start-Process -FilePath "dsregcmd" -ArgumentList "/leave" -Wait
+        Start-Process -FilePath "dsregcmd" -ArgumentList "/join" -Wait
     }
 }
 else {
@@ -47,6 +51,9 @@ else {
     New-Item -Path $registryPath -Force
     New-ItemProperty -Path $registryPath -Name "TenantId" -Value $expectedTenantId -Force
     New-ItemProperty -Path $registryPath -Name "TenantName" -Value $expectedTenantName -Force
+    Log-Message "Registry keys not found. Setting expected values and proceeding with dsregcmd commands..."
+    Start-Process -FilePath "dsregcmd" -ArgumentList "/leave" -Wait
+    Start-Process -FilePath "dsregcmd" -ArgumentList "/join" -Wait
 }
 
 # Clean up Intune
@@ -88,8 +95,19 @@ if (!(Test-Path $logFilePath)) {
     }
 } 
 Else{
-    $GUIDSError = "No GUIDS found for use in delting keys. Check C:\ProgramData\Microsoft\DMClient\"
-    $GUIDSError | Out-File C:\Windows\Temp\CertKeyRemoval.log -Append -NoClobber
+    Log-Message "No GUIDS found for use in delting keys. Check C:\ProgramData\Microsoft\DMClient\"
+}
+
+# Run dsregcmd /status and capture the output
+$dsregcmdOutput = dsregcmd /status
+
+# Check if either expectedTenantId or expectedTenantName is present in the output
+if ($dsregcmdOutput -match $expectedTenantId -or $output -match $expectedTenantName) {
+    Log-Message "Expected tenant values were found in dsregcmd /status output."
+} else {
+    # Display the whole output if neither expectedTenantId nor expectedTenantName is present
+    Log-Message "Expected tenant values were NOT found in dsregcmd /status output."
+    Log-Message $dsregcmdOutput
 }
 
 # Log errors
