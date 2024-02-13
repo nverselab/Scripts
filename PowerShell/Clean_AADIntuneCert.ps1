@@ -7,6 +7,14 @@ $expectedTenantName = "YOUR_EXPECTED_TENANT_NAME"
 # Log file path
 $logFilePath = "C:\AAD_IntuneCertKeyRemoval.log"
 
+# Function to log messages
+function Log-Message {
+    param (
+        [string]$message
+    )
+    $message | Out-File -Append -FilePath $logFilePath -NoClobber
+}
+
 # Create the log file path if it does not exist.
 $folderPath = Split-Path $logFilePath -Parent
 if (-not (Test-Path $folderPath)) {
@@ -57,45 +65,43 @@ else {
 }
 
 # Clean up Intune
-
+# Check if log file already exists
 if (!(Test-Path $logFilePath)) {
-    # Check if log file already exists
-    $IntuneCleanUpLogExists = Test-Path "C:\Windows\Temp\CertKeyRemoval.log"
-    if (!$IntuneCleanUpLogExists) {
 
     $IntuneCert = Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.Issuer -like '*Microsoft Intune*' }
+
+    # Check for IntuneCert and remove it.
     If($IntuneCert){
         $IntuneCert | Remove-Item -Confirm:$false -Force
         Log-Message "Intune certificate removed."
     }
     Else{
-        $CertError = "Could not find and delete Intune cert."
-        $CertError | Out-File C:\Windows\Temp\CertKeyRemoval.log -Append -NoClobber
-        Log-Message $CertError
+        Log-Message "Intune Certificates not found.  Proceeding to GUID cleanup..."
     }
 
-        $IntuneGUIDs = Get-ChildItem C:\ProgramData\Microsoft\DMClient\
-        If($IntuneGUIDS){
-            ForEach($GUID in $IntuneGUIDs){
-                $Key=$GUID.Name
-                Get-Item HKLM:\SOFTWARE\Microsoft\Enrollments\$Key | Remove-Item -Force -Verbose -Recurse
-                Get-Item HKLM:\SOFTWARE\Microsoft\Enrollments\Status\$Key | Remove-Item -Force -Verbose -Recurse
-                Get-Item HKLM:\SOFTWARE\Microsoft\EnterpriseResourceManager\Tracked\$Key | Remove-Item -Force -Verbose -Recurse
-                Get-Item HKLM:\SOFTWARE\Microsoft\PolicyManager\AdmxInstalled\$Key | Remove-Item -Force -Verbose -Recurse
-                Get-Item HKLM:\SOFTWARE\Microsoft\PolicyManager\Providers\$Key | Remove-Item -Force -Verbose -Recurse
-                Get-Item HKLM:\SOFTWARE\Microsoft\Provisioning\OMADM\Accounts\$Key | Remove-Item -Force -Verbose -Recurse
-                Get-Item HKLM:\SOFTWARE\Microsoft\Provisioning\OMADM\Logger\$Key | Remove-Item -Force -Verbose -Recurse
-                Get-Item HKLM:\SOFTWARE\Microsoft\Provisioning\OMADM\Sessions\$Key | Remove-Item -Force -Verbose -Recurse
-                Log-Message "Intune cleanup completed."
-            }
+    $IntuneGUIDs = Get-ChildItem C:\ProgramData\Microsoft\DMClient\
+
+    # Check if IntuneGUIDs exist and if they do, delete them.
+    If($IntuneGUIDS){
+        ForEach($GUID in $IntuneGUIDs){
+            $Key=$GUID.Name
+            Get-Item HKLM:\SOFTWARE\Microsoft\Enrollments\$Key | Remove-Item -Force -Verbose -Recurse
+            Get-Item HKLM:\SOFTWARE\Microsoft\Enrollments\Status\$Key | Remove-Item -Force -Verbose -Recurse
+            Get-Item HKLM:\SOFTWARE\Microsoft\EnterpriseResourceManager\Tracked\$Key | Remove-Item -Force -Verbose -Recurse
+            Get-Item HKLM:\SOFTWARE\Microsoft\PolicyManager\AdmxInstalled\$Key | Remove-Item -Force -Verbose -Recurse
+            Get-Item HKLM:\SOFTWARE\Microsoft\PolicyManager\Providers\$Key | Remove-Item -Force -Verbose -Recurse
+            Get-Item HKLM:\SOFTWARE\Microsoft\Provisioning\OMADM\Accounts\$Key | Remove-Item -Force -Verbose -Recurse
+            Get-Item HKLM:\SOFTWARE\Microsoft\Provisioning\OMADM\Logger\$Key | Remove-Item -Force -Verbose -Recurse
+            Get-Item HKLM:\SOFTWARE\Microsoft\Provisioning\OMADM\Sessions\$Key | Remove-Item -Force -Verbose -Recurse
+            Log-Message "IntuneGUIDs found and removed."
         }
     }
     else {
-        Log-Message "Intune cleanup log already exists. Skipping cleanup."
+        Log-Message "No GUIDS found for use in delting keys. Check C:\ProgramData\Microsoft\DMClient\"
     }
-} 
-Else{
-    Log-Message "No GUIDS found for use in delting keys. Check C:\ProgramData\Microsoft\DMClient\"
+}
+Else {
+    Log-Message "Log from previous cleanup found in $logFilePath.  Skipping Intune Clean-up."
 }
 
 # Run dsregcmd /status and capture the output
@@ -104,7 +110,8 @@ $dsregcmdOutput = dsregcmd /status
 # Check if either expectedTenantId or expectedTenantName is present in the output
 if ($dsregcmdOutput -match $expectedTenantId -or $output -match $expectedTenantName) {
     Log-Message "Expected tenant values were found in dsregcmd /status output."
-} else {
+} 
+Else {
     # Display the whole output if neither expectedTenantId nor expectedTenantName is present
     Log-Message "Expected tenant values were NOT found in dsregcmd /status output."
     Log-Message $dsregcmdOutput
