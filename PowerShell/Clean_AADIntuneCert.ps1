@@ -7,6 +7,12 @@ $expectedTenantName = "YOUR_EXPECTED_TENANT_NAME"
 # Log file path
 $logFilePath = "C:\AAD_IntuneCertKeyRemoval.log"
 
+# Create the log file path if it does not exist.
+$folderPath = Split-Path $logFilePath -Parent
+if (-not (Test-Path $folderPath)) {
+  New-Item -Path $folderPath -ItemType Directory
+}
+
 # Function to log messages
 function Log-Message {
     param (
