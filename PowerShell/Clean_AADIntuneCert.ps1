@@ -37,7 +37,7 @@ If (Test-Path $RegistryPath) {
     if ($currentTenantId -eq $expectedTenantId -and $currentTenantName -eq $expectedTenantName) {
         # Registry values match the expected values, proceed with dsregcmd commands
         Write-Host "Registry values match. Leaving and joining AAD..."
-        Log-Message "Registry values match the expected values, proceed with dsregcmd commands."
+        Log-Message "Registry values match the expected values."
     }
     else {
         # Registry values do not match the expected values, remove the registry path and set expected values
@@ -46,7 +46,7 @@ If (Test-Path $RegistryPath) {
         New-Item -Path $registryPath -Force
         New-ItemProperty -Path $registryPath -Name "TenantId" -Value $expectedTenantId -Force
         New-ItemProperty -Path $registryPath -Name "TenantName" -Value $expectedTenantName -Force
-        Log-Message "Registry values do not match the expected values. Removing registry path and setting expected values and proceeding with dsregcmd commands..."
+        Log-Message "Registry values do not match the expected values. Removing registry path and setting expected values."
     }
 }
 else {
@@ -55,7 +55,7 @@ else {
     New-Item -Path $registryPath -Force
     New-ItemProperty -Path $registryPath -Name "TenantId" -Value $expectedTenantId -Force
     New-ItemProperty -Path $registryPath -Name "TenantName" -Value $expectedTenantName -Force
-    Log-Message "Registry keys not found. Setting expected values and proceeding with dsregcmd commands..."
+    Log-Message "Registry keys not found. Setting expected Registry values. "
 }
 
 # Re-check the resgistry keys and run the dsregcmd commands if correct.
