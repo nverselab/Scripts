@@ -5,8 +5,8 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 }
 
 # Get the currently logged-in user without prompt
-$currentUserName = Get-WmiObject -Class Win32_ComputerSystem | Select-Object -ExpandProperty UserName
-$currentUserName = $currentUserName -replace ".*\\"
+$currentUserName = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\LogonUI").LastLoggedOnUser -replace '@.*$'
+$currentUserName = $currentUserName -replace '^.*\\'
 
 # Check if the user is already a member of the Administrators group
 if (Get-LocalGroupMember -Group "Administrators" -Member $currentUserName -ErrorAction SilentlyContinue) {
