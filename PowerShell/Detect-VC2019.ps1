@@ -20,7 +20,9 @@ $Hives | ForEach-Object {
             $CurrentVersion = [version]$Properties.DisplayVersion
             if($CurrentVersion -ge $RequiredVersion){
                 "installed"
+                exit 1
             }
         }
     }
 }
+exit 0
