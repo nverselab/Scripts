@@ -61,3 +61,18 @@ catch [Exception] {
 }
 
 Remove-CimSession -CimSession $session
+
+# Get the list of installed AppxPackages
+$installedPackages = Get-AppxPackage
+
+# Check if Microsoft Company Portal is installed
+
+$companyPortal = $installedPackages | Where-Object { $_.Name -eq "Microsoft.CompanyPortal" }
+
+if ($companyPortal) {
+    # If Microsoft Company Portal is installed, exit with status code 0
+    exit 0
+} else {
+    # If Microsoft Company Portal is not installed, exit with status code 1
+    exit 1
+}
