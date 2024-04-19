@@ -44,10 +44,10 @@ Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$PrintDriverInstaller`
 
 # Overwrite Config File
 write-host "Copying $PSScriptRoot\$OnBaseConfig to $OnBaseConfigPath"
-Copy-Item -Path $PSScriptRoot\$OnBaseConfig -Destination $OnBaseConfigPath -Force
+robocopy $PSScriptRoot $OnBaseConfigPath $OnBaseConfig /COPYALL /LOG:"C:\IntuneLogs\RobocopyLog.txt" /V /TEE /R:1 /W:5
 
 $sourceHash = Get-FileHash -Path $PSScriptRoot\$OnBaseConfig -Algorithm MD5
-$destinationHash = Get-FileHash -Path (Join-Path $OnBaseConfigPath (Get-Item $OnBaseConfig).Name) -Algorithm MD5
+$destinationHash = Get-FileHash -Path $OnBaseConfigPath\$OnBaseConfig -Algorithm MD5
 if ($sourceHash.Hash -eq $destinationHash.Hash) {
     Write-Host "File copied successfully."
 } else {
