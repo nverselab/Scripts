@@ -39,8 +39,11 @@ foreach ($dotNetFile in $dotNetFiles) {
 # Start OnBase Install
 write-host "Installing $OnBaseInstaller"
 Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$OnBaseInstaller`" /quiet /l*v `"C:\IntuneLogs\OnBase-Installer.log`"" -Wait
-write-host "Installing $PrintDriverInstaller"
-Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$PrintDriverInstaller`" /quiet /l*v `"C:\IntuneLogs\OnBase-PrintDriver.log`"" -Wait -ErrorAction SilentlyContinue
+#write-host "Installing $PrintDriverInstaller"
+#Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$PrintDriverInstaller`" /quiet /l*v `"C:\IntuneLogs\OnBase-PrintDriver.log`"" -Wait -ErrorAction SilentlyContinue
+
+#Wait 30 seconds before continuing
+Start-Sleep -s 30
 
 # Overwrite Config File
 write-host "Copying $PSScriptRoot\$OnBaseConfig to $OnBaseConfigPath"
