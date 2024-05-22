@@ -36,21 +36,6 @@ checkTokenExpiration() {
     fi
 }
 
-invalidateToken() {
-	responseCode=$(curl -w "%{http_code}" -H "Authorization: Bearer ${access_token}" $url/api/v1/auth/invalidate-token -X POST -s -o /dev/null)
-	if [[ ${responseCode} == 204 ]]
-	then
-		echo "Token successfully invalidated"
-		access_token=""
-		token_expiration_epoch="0"
-	elif [[ ${responseCode} == 401 ]]
-	then
-		echo "Token already invalid"
-	else
-		echo "An unknown error occurred invalidating the token"
-	fi
-}
-
 # Call API to get Asset Tag
 
 checkTokenExpiration
