@@ -2,7 +2,7 @@
 
 # Reports back the customerID: result from the agent_info section of a falconctl stats query
 
-result="Not Installed or Running"
+result="Not Running"
 
 if [ -e /Applications/Falcon.app/Contents/MacOS/Falcon ]; then
 	syextNum=$(systemextensionsctl list | awk '/com.crowdstrike.falcon.Agent/ {print $7,$8}' | wc -l) 
