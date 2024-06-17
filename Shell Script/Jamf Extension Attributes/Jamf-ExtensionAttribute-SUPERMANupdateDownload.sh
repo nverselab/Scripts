@@ -3,11 +3,16 @@
 # Path to the log file
 log_file="/Library/Management/super/logs/msu-workflow.log"
 
+# Get the current macOS version
+current_os_version=$(sw_vers -productVersion)
+
 # Check if the last line contains the specified string
 if tail -n 1 "$log_file" | grep -q "DOWNLOAD MACOS VIA SOFTWAREUPDATE COMPLETED"; then
     # If found, echo the most recent line that has "Downloaded:"
     last_downloaded=$(grep "Downloaded:" "$log_file" | tail -n 1)
-    if [ -n "$last_downloaded" ]; then
+    if [[ -n "$last_downloaded" && "$last_downloaded" == *"$current_os_version"* ]]; then
+        echo "<result>Upgrade Complete</result>"
+    elif [ -n "$last_downloaded" ]; then
         echo "<result>$last_downloaded</result>"
     else
         echo "<result>No downloads staged.</result>"
