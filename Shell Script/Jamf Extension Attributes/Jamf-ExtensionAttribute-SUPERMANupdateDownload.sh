@@ -8,16 +8,16 @@ if tail -n 1 "$log_file" | grep -q "DOWNLOAD MACOS VIA SOFTWAREUPDATE COMPLETED"
     # If found, echo the most recent line that has "Downloaded:"
     last_downloaded=$(grep "Downloaded:" "$log_file" | tail -n 1)
     if [ -n "$last_downloaded" ]; then
-        echo "$last_downloaded"
+        echo "<result>$last_downloaded</result>"
     else
-        echo "No downloads staged."
+        echo "<result>No downloads staged.</result>"
     fi
 else
     # If not found, echo the most recent line that has "Downloading:"
     last_downloading=$(grep "Downloading:" "$log_file" | tail -n 1)
     if [ -n "$last_downloading" ]; then
-        echo "$last_downloading"
+        echo "<result>$last_downloading</result>"
     else
-        echo "No downloads staged."
+        echo "<result>No downloads staged.</result>"
     fi
 fi
