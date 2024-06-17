@@ -18,8 +18,8 @@ if tail -n 1 "$log_file" | grep -q "DOWNLOAD MACOS VIA SOFTWAREUPDATE COMPLETED"
         echo "<result>No downloads staged.</result>"
     fi
 else
-    # If not found, echo the most recent line that has "Downloading:"
-    last_downloading=$(grep "Downloading:" "$log_file" | tail -n 1)
+# If not found, echo the most recent line that has "Downloading:" with the highest percentage
+    last_downloading=$(grep -E "Downloading:.*%" "$log_file" | tail -c 20)
     if [ -n "$last_downloading" ]; then
         echo "<result>$last_downloading</result>"
     else
