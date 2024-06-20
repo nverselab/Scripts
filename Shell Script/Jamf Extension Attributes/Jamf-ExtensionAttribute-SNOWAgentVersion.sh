@@ -1,17 +1,12 @@
 #!/bin/bash
 
-# Path to the SNOW Agent
-agentPath="/opt/snow/snowagent"
-
-# Check if the agent exists
-if [ -f "$agentPath" ]; then
-    # If it exists, get the version and store it in a variable
-    agentVersion=$($agentPath version)
-    # Truncate the version to only show characters before the '+'
-    truncatedVersion=$(echo $agentVersion | awk -F'+' '{print $1}')
-    # Echo the truncated version
-    echo "<result>$truncatedVersion</result>"
+# Check if /opt/snow/snowagent exists
+if [ -f "/opt/snow/snowagent" ]; then
+    # Run the command and capture the output
+    version=$(sudo /opt/snow/snowagent version | cut -d '+' -f1)
+    # Echo the result within XML tags
+    echo "<result>$version</result>"
 else
-    # If it doesn't exist, echo "Not Installed"
+    # Echo "Not Installed" if the file does not exist
     echo "<result>Not Installed</result>"
 fi
