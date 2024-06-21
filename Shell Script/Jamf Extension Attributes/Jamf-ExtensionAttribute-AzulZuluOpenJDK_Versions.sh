@@ -19,8 +19,8 @@ else
         javaPath="${dir}/Contents/Home/bin/java"
         # Check if the java executable exists
         if [ -f "$javaPath" ]; then
-            # Run 'java -version', capture the output, and extract the line that starts with "openjdk version"
-            versionLine=$("$javaPath" -version 2>&1 | grep "openjdk version")
+            # Run 'java -version', capture the output, and extract the value in quotes
+            versionLine=$("$javaPath" -version 2>&1 | grep "openjdk version" | awk -F'"' '{print $2}')
             # Append the extracted line to the results string, followed by a newline character
             results+="${versionLine}\n"
         fi
