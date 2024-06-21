@@ -25,6 +25,13 @@ else
             results+="${versionLine}\n"
         fi
     done
-    # Echo the results within XML tags, removing the last newline character
-    echo -e "<result>\n${results%\\n}\n</result>"
+    # Check if results is not empty, then format it within <result> tags
+    if [ -n "$results" ]; then
+        # Remove the last newline character from results
+        results=${results%\\n}
+        # Echo the results within XML tags
+        echo -e "<result>${results}</result>"
+    else
+        echo "<result>Not Installed</result>"
+    fi
 fi
