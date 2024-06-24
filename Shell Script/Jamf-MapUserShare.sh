@@ -11,7 +11,7 @@ linkLocation="/Users/$username/Desktop/Home"
 # Prompt the user for their network password using a graphical dialog
 password=$(osascript <<EOF
 tell application "System Events"
-    display dialog "Please enter your password for accessing the network share ($shareURL):" default answer "" with hidden answer
+    display dialog "Please enter your password for accessing your network 'Home' drive ($shareURL):" default answer "" with hidden answer
     return text returned of result
 end tell
 EOF
