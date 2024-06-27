@@ -11,5 +11,5 @@ if [ -n "$epochTime" ]; then
     # Echo the result within <result> and </result> tags
     echo "<result>$formattedDate</result>"
 else
-    echo "<result>Error: 'Last scanned' time not found.</result>"
+    echo "<result>1970-01-01 00:00:00</result>"
 fi
