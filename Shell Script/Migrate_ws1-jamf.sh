@@ -4,7 +4,7 @@
 
 originurl="https://xxxx.awmdm.com/api" # The WS1 API URL of source environment
 wsoClientID="required" # Base64 encoded API credentials for the source WS1 tenant
-wsoSecret="required" # 	REST API token for the source WS1 tenant
+wsoSecret="required" # REST API token for the source WS1 tenant
 NewjssURL="required" # The URL of the new JSS server (e.g. https://yourSubDomain.jamfcloud.com)
 enrollInvitationID="optional"
 serial=`system_profiler SPHardwareDataType | awk '/Serial/ {print $4}'`
