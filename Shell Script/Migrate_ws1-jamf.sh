@@ -2,7 +2,7 @@
 
 # NOTE: This is currently a work in progress.  Not production ready.
 
-originurl="https://xxxx.awmdm.com/api" # The WS1 API URL of source environment
+originurl="required" # The WS1 API URL of source environment (e.g. https://as###.awmdm.com/api)
 wsoClientID="required" # Base64 encoded API credentials for the source WS1 tenant
 wsoSecret="required" # REST API token for the source WS1 tenant
 NewjssURL="required" # The URL of the new JSS server (e.g. https://yourSubDomain.jamfcloud.com)
