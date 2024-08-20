@@ -43,26 +43,26 @@ removeWS1
 # Instructions: Uncomment one of the desired enrollment workflows and comment out the other two.
 # Check if $enrollInvitationID has a value or is not equal to "optional"
 
-if [ -n "$enrollInvitationID" ] || [ "$enrollInvitationID" != "optional" ]; then
+#if [ -n "$enrollInvitationID" ] || [ "$enrollInvitationID" != "optional" ]; then
 
-  echo "Enrollment Invitation ID is set. Opening Enrollment Invitation URL."
+#  echo "Enrollment Invitation ID is set. Opening Enrollment Invitation URL."
 
 # Option 1: Enrollment Invtation URL (Automatically sets destination Site as configured and skips Enrollment Admin authentication)
-  enrollmentURL="$NewjssURL/enroll?invitation=$enrollInvitationID"
-  open $enrollmentURL
+#  enrollmentURL="$NewjssURL/enroll?invitation=$enrollInvitationID"
+#  open $enrollmentURL
 
-else
+#else
 
-  echo "Enrollment Invitation ID not set. Opening generic Enroll URL."
+#  echo "Enrollment Invitation ID not set. Opening generic Enroll URL."
 
 # Option 2: Generic Enrollment URL (requires Jamf Admin with Enroll Permissions or user is in IdP group allowed to Enroll)
   # Opens the Enrollment Invitation URL 
-  open $NewjssURL/enroll
+#  open $NewjssURL/enroll
 
-fi
+#fi
 
 # Option 3: Attempt to re-enroll using ADE (Requires correct MDM assignment in ABM/ASM)
-#sudo profiles renew -type enrollment
+sudo profiles renew -type enrollment
 
 exit 0
 
