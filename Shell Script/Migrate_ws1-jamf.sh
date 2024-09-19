@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# NOTE: This is currently a work in progress.  Not production ready.
+# Note: This is a work in progress and is not ready for production.
 
-originurl="required" # The WS1 API URL of source environment (e.g. https://as###.awmdm.com)
-wsoClientID="required" # Base64 encoded API credentials for the source WS1 tenant
-wsoSecret="required" # REST API token for the source WS1 tenant
-NewjssURL="required" # The URL of the new JSS server (e.g. https://yourSubDomain.jamfcloud.com)
+originurl="https://xx####.awmdm.com" # The WS1 API URL of source environment
+wsoClientID="required" # REST API token for the source WS1 tenant
+wsoSecret="required" # Base64 encoded API credentials for the source WS1 tenant
+NewjssURL="https://yourSubDomain.jamfcloud.com" # The URL of the new JSS server (e.g. https://yourSubDomain.jamfcloud.com)
 enrollInvitationID="optional"
 serial=`system_profiler SPHardwareDataType | awk '/Serial/ {print $4}'`
 
@@ -27,7 +27,7 @@ fi
   # API Call to enterprise wipe device
   url="$originurl/api/mdm/devices/commands?command=EnterpriseWipe&searchBy=Serialnumber&id=$serial"
   echo "POST - $url"
-  response=$(/usr/bin/curl -X POST $url -H "Authorization: $wsoClientID" -H "aw-tenant-code: $wsoSecret" -H  "accept: application/json" -H "Content-Type: application/json" -H "Content-Length: 0")
+  response=$(/usr/bin/curl -X POST $url -H "Authorization: Bearer $wsoSecret" -H "aw-tenant-code: $wsoClientID" -H "accept: application/json" -H "Content-Type: application/json" -H "Content-Length: 0")
   #check if successful
   if [[ ! -z "$response" ]]; then
     #api failed
@@ -37,32 +37,37 @@ fi
 
 ########## Perform Enterprise Wipe from Source WS1 via API ##########
 
+# Check if credentials are set
+if [[ "$wsoClientID" == "required" || "$wsoSecret" == "required" ]]; then
+  echo "Error: API credentials are not set. Please set wsoClientID and wsoSecret."
+  exit 1
+fi
+
 removeWS1
 
 ########## Re-Enroll the Computer to new JSS server ##########
 # Instructions: Uncomment one of the desired enrollment workflows and comment out the other two.
 # Check if $enrollInvitationID has a value or is not equal to "optional"
 
-#if [ -n "$enrollInvitationID" ] || [ "$enrollInvitationID" != "optional" ]; then
+if [ -n "$enrollInvitationID" ] || [ "$enrollInvitationID" != "optional" ]; then
 
-#  echo "Enrollment Invitation ID is set. Opening Enrollment Invitation URL."
+  echo "Enrollment Invitation ID is set. Opening Enrollment Invitation URL."
 
 # Option 1: Enrollment Invtation URL (Automatically sets destination Site as configured and skips Enrollment Admin authentication)
-#  enrollmentURL="$NewjssURL/enroll?invitation=$enrollInvitationID"
-#  open $enrollmentURL
+  enrollmentURL="$NewjssURL/enroll?invitation=$enrollInvitationID"
+  open $enrollmentURL
 
-#else
+else
 
-#  echo "Enrollment Invitation ID not set. Opening generic Enroll URL."
+  echo "Enrollment Invitation ID not set. Opening generic Enroll URL."
 
 # Option 2: Generic Enrollment URL (requires Jamf Admin with Enroll Permissions or user is in IdP group allowed to Enroll)
   # Opens the Enrollment Invitation URL 
-#  open $NewjssURL/enroll
+  open $NewjssURL/enroll
 
-#fi
+fi
 
 # Option 3: Attempt to re-enroll using ADE (Requires correct MDM assignment in ABM/ASM)
-sudo profiles renew -type enrollment
+#sudo profiles renew -type enrollment
 
 exit 0
-
