@@ -25,10 +25,19 @@ curl -sku "${jamfUser}:${jamfPass}" "${OldjssUrl}/JSSResource/computercommands/c
 
 echo "Waiting for all Jamf profiles to be removed..."
 
-# Loop until no profiles with the word "jamf" are found
+# Loop until no profiles with the word "jamf" are found or until 30 minutes have passed
+timeout=1800  # 30 minutes in seconds
+interval=10   # Check every 10 seconds
+elapsed=0
+
 while profiles -P | grep -iq "jamf"; do
+  if [ $elapsed -ge $timeout ]; then
+    echo "Timeout reached. Jamf profiles were not removed within 30 minutes."
+    exit 1
+  fi
   echo "Jamf profiles still present. Checking again in 10 seconds..."
-  sleep 10
+  sleep $interval
+  elapsed=$((elapsed + interval))
 done
 
 echo "All Jamf profiles have been removed."
