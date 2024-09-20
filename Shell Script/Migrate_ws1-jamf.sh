@@ -54,9 +54,9 @@ fi
 
 removeWS1
 
-echo "Waiting for all Jamf profiles to be removed..."
+echo "Waiting for all WSO profiles to be removed..."
 
-# Loop until no profiles with the word "jamf" are found or until 30 minutes have passed
+# Loop until no profiles assumed from WSO are found or until 30 minutes have passed
 timeout=1800  # 30 minutes in seconds
 interval=10   # Check every 10 seconds
 elapsed=0
