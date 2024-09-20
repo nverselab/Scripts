@@ -23,6 +23,16 @@ echo "Jamf ID: $jamf_id"
 # Curl to send command to remove MDM profile from the Mac
 curl -sku "${jamfUser}:${jamfPass}" "${OldjssUrl}/JSSResource/computercommands/command/UnmanageDevice/id/${jamf_id}" -X POST
 
+echo "Waiting for all Jamf profiles to be removed..."
+
+# Loop until no profiles with the word "jamf" are found
+while profiles -P | grep -iq "jamf"; do
+  echo "Jamf profiles still present. Checking again in 10 seconds..."
+  sleep 10
+done
+
+echo "All Jamf profiles have been removed."
+
 echo "Removing jamf binary and framework from Mac..."
 # Removing Jamf binary and framework after the MDM has been removed
 jamf removeframework
