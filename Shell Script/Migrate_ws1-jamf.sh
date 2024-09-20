@@ -2,11 +2,11 @@
 
 # Note: this is a work in progress and may not be ready for production.
 
-originurl="https://xx####.awmdm.com" # The WS1 API URL of source environment
+originurl="required" # The WS1 API URL of source environment (example: https://xx####.awmdm.com)
 oAuthTokenURL="https://na.uemauth.vmwservices.com/connect/token" # The Access Token URL for your VMWare WS1 Tenant (differs by region: https://kb.omnissa.com/s/article/76967)
 wsoClientID="required" # REST API oAuth client ID for the source WS1 tenant. Requires Console Administrator role or similar to use the API
 wsoSecret="required" # API oAuth credentials for the client ID in the source WS1 tenant
-NewjssURL="https://yourSubDomain.jamfcloud.com" # The URL of the new JSS server (e.g. https://yourSubDomain.jamfcloud.com)
+NewjssURL="optional" # The URL of the new JSS server (e.g. https://yourSubDomain.jamfcloud.com)
 enrollInvitationID="optional"
 serial=`system_profiler SPHardwareDataType | awk '/Serial/ {print $4}'`
 
@@ -21,6 +21,7 @@ bearertoken=$(echo $auth_response | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/
 # Function to unenroll device from ws1 by serial number
 # Source: https://github.com/euc-oss/euc-samples/blob/main/UEM-Samples/Utilities%20and%20Tools/macOS/Migration-Tool/migrationToolWS1/payload/Library/Application%20Support/VMware/migrator.sh
 removeWS1() {
+
   echo "Removing Workspace ONE UEM"
   # Make sure the Intelligent Hub uninstall script exists
 if  [[ -e /Library/Scripts/hubuninstaller.sh ]]; then
@@ -46,9 +47,9 @@ fi
 ########## Perform Enterprise Wipe from Source WS1 via API ##########
 
 # Check if credentials are set
-if [[ "$wsoClientID" == "required" || "$wsoSecret" == "required" ]]; then
-  echo "Error: API credentials are not set. Please set wsoClientID and wsoSecret."
-  #exit 1
+if [[ "$wsoClientID" == "required" && "$wsoSecret" == "required" && "originurl" == "required"]]; then
+  echo "Error: API credentials or origin URL are not set. Please set wsoClientID, wsoSecret, and originurl variables."
+  exit 1
 fi
 
 removeWS1
@@ -90,7 +91,7 @@ else
 
 # Option 2: Generic Enrollment URL (requires Jamf Admin with Enroll Permissions or user is in IdP group allowed to Enroll)
 
-  if [ -n "$NewjssURL" ] && [ "$NewjssURL" != "https://yourSubDomain.jamfcloud.com" ]; then
+  if [ -n "$NewjssURL" ] && [ "$NewjssURL" != "optional" ]; then
     # Opens the Enrollment Invitation URL 
     open $NewjssURL/enroll
 
