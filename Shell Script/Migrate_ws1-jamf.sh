@@ -10,6 +10,16 @@ NewjssURL="optional" # The URL of the new JSS server (e.g. https://yourSubDomain
 enrollInvitationID="optional"
 serial=`system_profiler SPHardwareDataType | awk '/Serial/ {print $4}'`
 
+# Get the logged in user's name
+LoggedinUser=$(/usr/bin/stat -f%Su /dev/console)
+
+# Check to see if a user is logged in and exit unsuccessfully if they are not
+
+if [ -z "$LoggedinUser" -o "$LoggedinUser" = "loginwindow" ]; then
+    echo "no user logged in, cannot proceed"
+    exit 1
+fi
+
 # Obtain an authorization token
 auth_response=$(curl -X POST "$oAuthTokenURL" \
   -H "Content-Type: application/x-www-form-urlencoded" \
@@ -104,6 +114,43 @@ else
 fi
 
 # Option 3: Attempt to re-enroll using ADE (Requires correct MDM assignment in ABM/ASM)
+
+## Elevate user if not an administrator
+
+# Prompt for Password until entered
+userPass=""
+until [[ $userPass != "" ]]
+do
+userPass=$(/usr/bin/osascript<<END
+application "System Events"
+activate
+set the answer to text returned of (display dialog "IT needs to set some things up for you complete re-enrollment.  Please Enter your Password:" default answer "" with hidden answer buttons {"Continue"} default button 1)
+END
+)
+done
+    
+# Loop until successful
+result=""
+
+until [[ $result == "success" ]]
+do
+    
+## Temorarily Elevate User if they aren't already an Admin
+    
+if groups $LoggedinUser | grep -q -w admin; then 
+    admin="yes"
+else 
+    /usr/sbin/dseditgroup -o edit -a $LoggedinUser -t user admin
+fi
+
 sudo profiles renew -type enrollment
+
+
+## Remove User from Admin if they were not already an admin
+# Note: Needs testing. May need to add a delay for MDM Profile install time.
+
+if [[ $admin != "yes" ]]; then
+dseditgroup -o edit -d $LoggedinUser -t user admin
+fi
 
 exit 0
