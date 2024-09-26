@@ -144,7 +144,7 @@ else
 fi
 
 sudo profiles renew -type enrollment
-
+sleep 320
 
 ## Remove User from Admin if they were not already an admin
 # Note: Needs testing. May need to add a delay for MDM Profile install time.
