@@ -47,7 +47,7 @@ fi
 ########## Perform Enterprise Wipe from Source WS1 via API ##########
 
 # Check if credentials are set
-if [[ "$wsoClientID" == "required" && "$wsoSecret" == "required" && "originurl" == "required"]]; then
+if [[ "$wsoClientID" == "required" && "$wsoSecret" == "required" && "$originurl" == "required" ]]; then
   echo "Error: API credentials or origin URL are not set. Please set wsoClientID, wsoSecret, and originurl variables."
   exit 1
 fi
