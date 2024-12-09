@@ -5,6 +5,6 @@ if [ "$NessusAgentInstalled" != "nessuscli" ]
 then
  echo "<result>Not Installed</result>"
 else 
- NessusAgentVersion="$(/Library/NessusAgent/run/sbin/nessuscli -v | awk 'NR==1{print $3 " " $4 " " $5}')"
+ NessusAgentVersion="$(/Library/NessusAgent/run/sbin/nessuscli -v | awk 'NR==1{print $4}')"
  echo "<result>$NessusAgentVersion</result>"
 fi
