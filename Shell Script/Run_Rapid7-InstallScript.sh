@@ -4,12 +4,12 @@ arch=$(/usr/bin/arch)
 
 if [ "$arch" == "arm64" ]; then
     echo "Apple Silicon Detected"
-    chmod +x /Users/Shared/CPCStaging/agent_installer-arm64.sh
-    /bin/sh /Users/Shared/CPCStaging/agent_installer-arm64.sh install_start --token $4
+    chmod +x $5/agent_installer-arm64.sh
+    /bin/sh $5/agent_installer-arm64.sh install_start --token $4
 else
     echo "Intel Detected"
-    chmod +x /Users/Shared/CPCStaging/agent_installer.sh
-    /bin/sh /Users/Shared/CPCStaging/agent_installer.sh install_start --token $4
+    chmod +x $5/agent_installer.sh
+    /bin/sh $5/agent_installer.sh install_start --token $4
 fi
 
 # Detect Rapid7 is running
