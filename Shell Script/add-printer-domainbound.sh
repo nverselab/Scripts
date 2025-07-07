@@ -1,7 +1,6 @@
 #!/bin/bash
 #Mounts the requested share if it doesn't already exist
 #Accepts shares in the standard form smb://server/share
-#In the event of the share being left blank it will attempt to mount the AD home share
 
 #Start seperate process
 (
