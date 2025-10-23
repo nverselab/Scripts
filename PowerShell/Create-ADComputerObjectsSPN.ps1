@@ -1,3 +1,5 @@
+## Purpose: Create Computer Object Placeholders for RADIUS to authenticate non-domain bound Macs
+
 # Define the OU path
 $OU = "OU=macs,OU=workstations,DC=domain,DC=local"
  
