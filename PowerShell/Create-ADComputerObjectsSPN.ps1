@@ -1,4 +1,5 @@
 ## Purpose: Create Computer Object Placeholders for RADIUS to authenticate non-domain bound Macs
+## Requires ActiveDirectory PowerShell Module: Add-WindowsCapability -Online -Name Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0
 
 # Define the OU path
 $OU = "OU=macs,OU=workstations,DC=domain,DC=local"
@@ -7,7 +8,7 @@ $OU = "OU=macs,OU=workstations,DC=domain,DC=local"
 $InputFile = "C:\Path\To\computer_names.txt"
  
 # Import Active Directory module
-Import-Module ActiveDirectory
+Add-WindowsCapability -Online -Name Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0
  
 # Read computer names from the file
 $ComputerNames = Get-Content -Path $InputFile
