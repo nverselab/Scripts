@@ -47,7 +47,7 @@ do
 userPass=$(/usr/bin/osascript<<END
 application "System Events"
 activate
-set the answer to text returned of (display dialog "IT needs to set some things up for you.  Please Enter your Password:" default answer "" with hidden answer buttons {"Continue"} default button 1)
+set the answer to text returned of (display dialog "This action securely saves your Mac’s bootstrap token with our management system. The bootstrap token helps IT automatically unlock and manage certain security features on your device, like enabling FileVault or performing updates, without needing your password. Running this ensures your Mac stays compliant and easy to support.  Please Enter your Password:" default answer "" with hidden answer buttons {"Continue"} default button 1)
 END
 )
 done
