@@ -11,11 +11,11 @@
 #######################
 
 # Exit successfully if Bootstrap token is already escrowed
-verify=$(profiles status -type bootstraptoken | awk '/escrowed/ {print $7}')
-if [[ $verify == "YES" ]]; then
-    echo "Bootstrap already escrowed. Exiting successfully"
-    exit 0
-fi
+#verify=$(profiles status -type bootstraptoken | awk '/escrowed/ {print $7}')
+#if [[ $verify == "YES" ]]; then
+#    echo "Bootstrap already escrowed. Exiting successfully"
+#    exit 0
+#fi
 
 # Get the logged in user's name
 LoggedinUser=$(/usr/bin/stat -f%Su /dev/console)
