@@ -7,7 +7,7 @@
 # 	Intel: https://javadl.oracle.com/webapps/download/AutoDL?BundleId=252315_68ce765258164726922591683c51982c
 # 	ARM: https://javadl.oracle.com/webapps/download/AutoDL?BundleId=252313_68ce765258164726922591683c51982c
 
-StagePath="/Users/Shared/JamfStage"
+StagePath="/Users/Shared/JamfStage/sapgui"
 INSTALLERS="$StagePath/PlatinGUI*.jar"
 INSTALL_PATH="/Applications/SAP Clients"
 JAVA_HOME=$(/usr/libexec/java_home -v 1.8*)
@@ -56,9 +56,9 @@ if [[ ! -d "$dest_dir" ]]; then
 	fi
 fi
 
-cp -p "$StagePath/SAPGUILandscape.xml" "$dest_dir/SAPGUILandscape.xml"
+cp -p "$StagePath/SAPUILandscape.xml" "$dest_dir/SAPUILandscape.xml"
 
 # chown the file to the current logged-in user
-chown "$currentLoggedInUser" "$dest_dir/SAPGUILandscape.xml" || true
+chown "$currentLoggedInUser" "$dest_dir/SAPUILandscape.xml" || true
 
 exit $ERROR
