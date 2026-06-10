@@ -29,12 +29,14 @@ IFS=$'\n'
 if [[ -d "$JAVA_HOME" && -x "$JAVA_BIN" ]]; then
 
 	for INSTALL in ${INSTALLERS}; do
-
+		echo "Fixing file permissions and bypassing Gatekeeper."
+		chmod +x $INSTALL && xattr -d com.apple.quarantine $INSTALL
+		
 		echo "Attempting to install $INSTALL …"
 		"$JAVA_BIN" -jar "$INSTALL" –nogui –force –nodesktopicons –installdir "$INSTALL_PATH" >/dev/null 2>&1
 	
 		if [[ $? -ne 0 ]]; then
-			echo"ERROR! Installation of $INSTALL failed"
+			echo "ERROR! Installation of $INSTALL failed"
 			ERROR=1
 			break
 		else
