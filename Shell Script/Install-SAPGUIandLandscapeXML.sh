@@ -19,7 +19,7 @@ ERROR=0
 
 # Validate the logged in user: must be non-empty and not root or mbsetup
 if [[ -z "$currentLoggedInUser" || "$currentLoggedInUser" == "root" || "$currentLoggedInUser" == "mbsetup" ]]; then
-	/usr/bin/logger "ERROR! Not running with Logged In User"
+	echo "ERROR! Not running with Logged In User"
 	ERROR=2
 	exit $ERROR
 fi
@@ -30,27 +30,27 @@ if [[ -d "$JAVA_HOME" && -x "$JAVA_BIN" ]]; then
 
 	for INSTALL in ${INSTALLERS}; do
 
-		/usr/bin/logger "Attempting to install $INSTALL …"
+		echo "Attempting to install $INSTALL …"
 		"$JAVA_BIN" -jar "$INSTALL" –nogui –force –nodesktopicons –installdir "$INSTALL_PATH" >/dev/null 2>&1
 	
 		if [[ $? -ne 0 ]]; then
-			/usr/bin/logger "ERROR! Installation of $INSTALL failed"
+			echo"ERROR! Installation of $INSTALL failed"
 			ERROR=1
 			break
 		else
-			/usr/bin/logger "Successfully installed $INSTALL"
+			echo "Successfully installed $INSTALL"
 		fi
 	done
 
 else
-	/usr/bin/logger "ERROR! Java not found"
+	echo "ERROR! Java not found"
 	ERROR=1
 fi
 
 # Copy SAPUILandscape.xml to the logged in user's preferences
 if [[ ! -d "$dest_dir" ]]; then
 	if ! mkdir -p "$dest_dir"; then
-		/usr/bin/logger "ERROR! Failed to create destination directory $dest_dir"
+		echo "ERROR! Failed to create destination directory $dest_dir"
 		ERROR=3
 		exit $ERROR
 	fi
