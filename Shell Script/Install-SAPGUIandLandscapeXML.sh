@@ -17,6 +17,8 @@ src="$StagePath/SAPGUILandscape.xml"
 dest_dir="/Users/$currentLoggedInUser/Library/Preferences/SAP"
 ERROR=0
 
+script -a $StagePath/script.log
+
 # Validate the logged in user: must be non-empty and not root or mbsetup
 if [[ -z "$currentLoggedInUser" || "$currentLoggedInUser" == "root" || "$currentLoggedInUser" == "mbsetup" ]]; then
 	echo "ERROR! Not running with Logged In User"
