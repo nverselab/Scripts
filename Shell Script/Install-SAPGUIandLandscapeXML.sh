@@ -33,7 +33,7 @@ if [[ -d "$JAVA_HOME" && -x "$JAVA_BIN" ]]; then
 		chmod +x $INSTALL && xattr -d com.apple.quarantine $INSTALL
 		
 		echo "Attempting to install $INSTALL …"
-		"$JAVA_BIN" -jar "$INSTALL" –nogui –force –nodesktopicons –installdir "$INSTALL_PATH" >/dev/null 2>&1
+		"$JAVA_BIN" -jar "$INSTALL" –nogui –force –nodesktopicons –installdir "$INSTALL_PATH" > $StagePath/sapInstall.log 2>&1
 	
 		if [[ $? -ne 0 ]]; then
 			echo "ERROR! Installation of $INSTALL failed"
