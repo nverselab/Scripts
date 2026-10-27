@@ -39,7 +39,13 @@ require_value() {
 }
 
 curl_config_escape() {
-    /usr/bin/sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' -e ':a;N;$!ba;s/\n/\\n/g'
+    /usr/bin/sed \
+        -e 's/\\/\\\\/g' \
+        -e 's/"/\\"/g' \
+        -e ':a' \
+        -e 'N' \
+        -e '$!ba' \
+        -e 's/\n/\\n/g'
 }
 
 get_access_token() {
