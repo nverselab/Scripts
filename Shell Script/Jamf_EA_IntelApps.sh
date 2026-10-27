@@ -1,6 +1,5 @@
 #!/bin/zsh
 
-:<<'ABOUT_THIS_SCRIPT'
 -----------------------------------------------------------------------
 	Written by:William Smith
 	Technical Enablement Manager
@@ -24,7 +23,6 @@
 	never used.
 
 -----------------------------------------------------------------------
-ABOUT_THIS_SCRIPT
 
 # list legacy apps in use with bundle identifiers
 
