@@ -1,28 +1,28 @@
 #!/bin/zsh
 
------------------------------------------------------------------------
-	Written by:William Smith
-	Technical Enablement Manager
-	Jamf
-	bill@talkingmoose.net
-	https://gist.github.com/talkingmoose/b3553675a613176b35c27b5c5028e0c2
-	
-	Originally posted: July 31, 2026
-	Updated: August 2, 2026
-			 • Added second command to find all Rosetta-dependent apps
-			   and report usage.
-			 September 20, 2026
-			 • Added support for system_profiler data returned from Golden Gate.
-			 • Corrected error where an empty apps list would result in "All
-			   apps support Apple silicon".
-			 • Added support for similar apps in different locations.
-			 • List apps with full paths
-	Purpose: Jamf Pro extension attribute to identity Intel-apps
-	requiring Rosetta to run on Apple Silicon Macs. It will list
-	apps that have launched at least once on the computer as well as apps
-	never used.
+# -----------------------------------------------------------------------
+#	Written by:William Smith
+#	Technical Enablement Manager
+#	Jamf
+#	bill@talkingmoose.net
+#	https://gist.github.com/talkingmoose/b3553675a613176b35c27b5c5028e0c2
+#	
+#	Originally posted: July 31, 2026
+#	Updated: August 2, 2026
+#			 • Added second command to find all Rosetta-dependent apps
+#			   and report usage.
+#			 September 20, 2026
+#			 • Corrected error where an empty apps list would result in "All
+#			   apps support Apple silicon".
+#			 • Added support for similar apps in different locations.
+#			 • List apps with full paths
+#	Purpose: Jamf Pro extension attribute to identity Intel-apps
+#	requiring Rosetta to run on Apple Silicon Macs. It will list
+#	apps that have launched at least once on the computer as well as apps
+#	never used.
+#
+#-----------------------------------------------------------------------
 
------------------------------------------------------------------------
 
 # list legacy apps in use with bundle identifiers
 
