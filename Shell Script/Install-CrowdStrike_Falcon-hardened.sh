@@ -1,27 +1,21 @@
 #!/bin/bash
 
-# CrowdStrike Falcon for macOS deployment through Microsoft Intune
+# CrowdStrike Falcon for macOS deployment through Microsoft Intune.
 #
-# Generate the obfuscated secret on a secured administrator Mac without putting
-# the real secret in shell history:
+# Base64 is obfuscation, not encryption. Generate the value on a secured
+# administrator Mac and paste it into OBFUSCATED_CLIENT_SECRET:
 #   read -r -s -p "CrowdStrike API client secret: " SECRET; echo
 #   printf '%s' "$SECRET" | /usr/bin/base64 | /usr/bin/tr -d '\n'; echo
 #   unset SECRET
-# Paste only the resulting Base64 value into OBFUSCATED_CLIENT_SECRET.
-#
-# IMPORTANT: Base64 is obfuscation, not encryption. The real secret is not stored
-# in clear text in this script, written to disk, printed, or placed in curl's
-# command arguments. It must still be decoded briefly in process memory because
-# the CrowdStrike OAuth endpoint requires the original client secret.
 
 set -euo pipefail
 set +x
 umask 077
 
-CLIENT_ID=""                       # Required
-OBFUSCATED_CLIENT_SECRET=""        # Required: Base64 output generated above
-CS_CCID=""                         # Required
-CS_INSTALL_TOKEN=""                # Optional unless required by CrowdStrike
+CLIENT_ID=""
+OBFUSCATED_CLIENT_SECRET=""
+CS_CCID="${CS_CCID:-}" # Optional override; retrieved from the API when empty.
+CS_INSTALL_TOKEN=""
 BASE_URL="https://api.crowdstrike.com"
 
 FALCONCTL="/Applications/Falcon.app/Contents/Resources/falconctl"
@@ -75,6 +69,24 @@ get_access_token() {
     printf '%s' "$token"
 }
 
+get_ccid() {
+    local token="$1" escaped_token response ccid
+    escaped_token="$(printf '%s' "$token" | curl_config_escape)"
+    response="$({
+        printf 'header = "Authorization: Bearer %s"\n' "$escaped_token"
+        printf 'silent\nshow-error\nfail\n'
+    } | /usr/bin/curl --config - \
+        "${BASE_URL}/sensors/queries/installers/ccid/v1")" || \
+        fail "Unable to query the CrowdStrike CCID."
+    unset escaped_token token
+
+    ccid="$(printf '%s' "$response" | /usr/bin/plutil -extract resources.0 raw -o - - 2>/dev/null)" || \
+        fail "CrowdStrike CCID response did not contain a CCID."
+    unset response
+    [[ -n "$ccid" ]] || fail "CrowdStrike returned an empty CCID."
+    printf '%s' "$ccid"
+}
+
 get_latest_installer_sha256() {
     local token="$1" escaped_token response sha256
     escaped_token="$(printf '%s' "$token" | curl_config_escape)"
@@ -109,7 +121,12 @@ download_installer() {
 [[ "$EUID" -eq 0 ]] || fail "This script must run as root."
 require_value "CLIENT_ID" "$CLIENT_ID"
 require_value "OBFUSCATED_CLIENT_SECRET" "$OBFUSCATED_CLIENT_SECRET"
-require_value "CS_CCID" "$CS_CCID"
+
+if [[ -z "$CS_CCID" ]]; then
+    APITOKEN="$(get_access_token)"
+    CS_CCID="$(get_ccid "$APITOKEN")"
+fi
+log "CrowdStrike CCID: $CS_CCID"
 
 if [[ -x "$FALCONCTL" ]] && "$FALCONCTL" stats 2>/dev/null | /usr/bin/grep -q 'Sensor operational: true'; then
     log "CrowdStrike Falcon is installed and operational. No action is required."
@@ -117,7 +134,9 @@ if [[ -x "$FALCONCTL" ]] && "$FALCONCTL" stats 2>/dev/null | /usr/bin/grep -q 'S
 fi
 
 log "CrowdStrike Falcon is not installed or is not operational. Starting remediation."
-APITOKEN="$(get_access_token)"
+if [[ -z "$APITOKEN" ]]; then
+    APITOKEN="$(get_access_token)"
+fi
 FALCON_LATEST_SHA256="$(get_latest_installer_sha256 "$APITOKEN")"
 PKG_PATH="$(/usr/bin/mktemp /private/tmp/FalconSensorMacOS.XXXXXX.pkg)"
 /bin/chmod 600 "$PKG_PATH"
